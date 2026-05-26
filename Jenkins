@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git url: 'https://github.com/jybb2020/Test_github.git', 
+                    branch: 'main'
+            }
+        }
+        
+        stage('Display Current Date') {
+            steps {
+                echo '🔍 Fetching Current Date...'
+                
+                script {
+                    def currentDate = sh(script: 'date "+%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
+                    echo "✅ Current Date and Time: ${currentDate}"
+                }
+                
+                sh '''
+                    echo "====================================="
+                    echo "📅 System Date Information:"
+                    echo "====================================="
+                    date
+                    echo "====================================="
+                '''
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo '🎉 Pipeline executed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed!'
+        }
+    }
+}
